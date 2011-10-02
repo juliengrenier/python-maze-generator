@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import web
-render = web.template.render('templates/')
+import settings
+render = web.template.render(settings.TEMPLATE_FOLDER,globals={'settings':settings})
 
 def render_live_html(maze):
     return render.maze(maze.size,maze,playable=True)
