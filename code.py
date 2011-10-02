@@ -26,7 +26,8 @@ class generate:
     def GET(self):
         return self.generate()
 
+application = web.application(urls,globals())
+
 if __name__ == '__main__':
-    app = web.application(urls, globals())
-    app.internalerror = web.debugerror
-    app.run()
+    application.internalerror = web.debugerror
+    application.run()
