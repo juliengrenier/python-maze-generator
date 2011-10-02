@@ -1,1 +1,9 @@
-This file was created by PyCharm (2.0 Early Access Preview) PY-108.1198 for binding GitHub repository
+Simple Maze generator
+
+To generate maze simply use  :
+    python mazegen.py [size] filename.html
+
+Or you can also launch a web application (web.py)
+    python code.py [port]
+
+To play through the maze, simply use the arrows.
