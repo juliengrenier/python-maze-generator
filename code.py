@@ -1,7 +1,7 @@
 import web
 
 from mazegen import GrowingTree
-from renderer import render_html
+from renderer import render_live_html
 urls =(
     '/','generate'
 )
@@ -18,7 +18,7 @@ class generate:
             size = 15
         maze = GrowingTree(size=size)
         maze.generate_maze()
-        return render_html(maze=maze)
+        return render_live_html(maze=maze)
 
 
     def POST(self):

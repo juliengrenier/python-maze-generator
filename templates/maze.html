@@ -1,4 +1,4 @@
-$def with (size,maze)
+$def with (size,maze,playable)
 <html>
 <head>
     <title>Maze</title>
@@ -8,14 +8,15 @@ $def with (size,maze)
 <body>
 
     <p>Press arrows to solve this maze; Vim binding also work (h,j,k,l)</p>
-    <form action="/" method="POST">
-        <p>Generate a new maze</p>
-        <select name="size">
-            $for option in range(3,45):
-                <option id="option-$option" value="$option">$option</option>
-        </select>
-        <input type="submit" name="submit" value="Generate">
-    </form>
+    $if playable:
+        <form action="/" method="POST">
+            <p>Generate a new maze</p>
+            <select name="size">
+                $for option in range(3,45):
+                    <option id="option-$option" value="$option">$option</option>
+            </select>
+            <input type="submit" name="submit" value="Generate">
+        </form>
 
     <input type="submit" name="reset" id="reset-button" value="Reset">
 

@@ -77,8 +77,8 @@ class Mazegen(object):
 
     def draw_maze(self,filename):
         f = open(filename,mode='w')
-        from renderer import render_html
-        result = render_html(self)
+        from renderer import render_static_html
+        result = render_static_html(self)
         f.write(result.__unicode__())
         f.close()
 
