@@ -20,7 +20,6 @@ move = function(direction,findNext){
     return;
 }
 $(document).ready(function(){
-    $("#option-$size").attr("selected","selected");
     $(document).keydown(function(event){
         if (event.keyCode == 37 || event.keyCode==72){ //left or h
 //            event.preventDefault();
@@ -47,8 +46,4 @@ $(document).ready(function(){
         $("td").removeClass('visited');
 
     });
-    $("#name-input").change(function(e){
-        e.preventDefault();
-        alert("Bravo "+ $(this).val());
-    })
 });
