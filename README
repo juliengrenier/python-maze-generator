@@ -7,3 +7,5 @@ Or you can also launch a web application (web.py)
     python code.py [port]
 
 To play through the maze, simply use the arrows.
+
+Visit http://maze.theangrymonkeys.com to play with it.
