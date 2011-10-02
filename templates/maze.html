@@ -1,0 +1,96 @@
+$def with (size,maze)
+<html>
+<head>
+    <title>Maze</title>
+    <link href="static/style.css" rel="stylesheet">
+    <script type="text/javascript" src="static/jquery.js"></script>
+</head>
+<body>
+
+    <p>Press arrows to solve this maze; Vim binding also work (h,j,k,l)</p>
+    <form action="/" method="POST">
+        <p>Generate a new maze</p>
+        <select name="size">
+            $for option in range(3,45):
+                <option id="option-$option" value="$option">$option</option>
+        </select>
+        <input type="submit" name="submit" value="Generate">
+    </form>
+
+    <input type="submit" name="reset" id="reset-button" value="Reset">
+
+    <table id="table-id">
+        $for row in range(size):
+            <tr>
+                $for column in range(size):
+
+                    $if row == 0 and column == 0:
+                        <td id="node-$row-$column" data-row="$row" data-column="$column" class="$maze.get_classes_for_node((row,column)) current">&nbsp;</td>
+                    $elif row == size-1 and column == size-1:
+                        <td id="node-$row-$column" data-row="$row" data-column="$column" class="$maze.get_classes_for_node((row,column)) end">&nbsp;</td>
+                    $else:
+                        <td id="node-$row-$column" data-row="$row" data-column="$column" class="$maze.get_classes_for_node((row,column))">&nbsp;</td>
+            </tr>
+    </table>
+<input type="text" id="name-input">
+    
+</body>
+<script type="text/javascript">
+    move = function(direction,findNext){
+        var currentPosition = $$(".current");
+
+        if (currentPosition.hasClass(direction)){
+            var next = findNext(parseInt(currentPosition.attr('data-row')),parseInt(currentPosition.attr('data-column')));
+            currentPosition.removeClass('current');
+            currentPosition.addClass('visited');
+            if (next.hasClass('visited')){
+                next.removeClass('visited');
+                currentPosition.removeClass('visited')
+            }
+
+            next.addClass('current');
+
+            if (next.hasClass('end')){
+                alert('Finish');
+            }
+        }else{
+        }
+        return;
+    }
+    $$(document).ready(function(){
+        $$("#option-$size").attr("selected","selected");
+        $$(document).keydown(function(event){
+            console.log(event.keyCode);
+
+            if (event.keyCode == 37 || event.keyCode==72){ //left or h
+                event.preventDefault();
+                return move('E',function(x,y){return $$("#node-"+x+"-"+(y-1))});
+            }
+            if (event.keyCode == 38 || event.keyCode==75){//up or k
+                event.preventDefault();
+                return move('N',function(x,y){return $$("#node-"+(x-1)+"-"+y)})
+            }
+            if (event.keyCode == 39 || event.keyCode==76){//right or l
+                event.preventDefault();
+                return move('W',function(x,y){return $$("#node-"+x+"-"+(y+1))})
+            }
+            if (event.keyCode == 40 || event.keyCode==74){//down or j
+                event.preventDefault();
+                return move('S',function(x,y){return $$("#node-"+(x+1)+"-"+y)})
+            }
+        });
+        $$("#reset-button").click(function(e){
+            e.preventDefault();
+            var currentPosition = $$(".current");
+            currentPosition.removeClass('current');
+            $$("#node-0-0").addClass('current');
+            $$("td").removeClass('visited');
+
+        });
+        $$("#name-input").change(function(e){
+            e.preventDefault();
+            alert("Bravo "+ $$(this).val());
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,43 @@
+table{
+    border-collapse: collapse;
+    width: 700px;
+    height: 700px;
+    max-height: 700px;
+}
+td{
+    border-color: black;
+    border-width: 3px;
+    border-style:solid;
+    font-size: 8px;
+}
+
+.visited{
+    background-color: #90ee90;
+}
+.current{
+    background-color: #60bb60 !important;
+}
+.end{
+    background-color: red;
+}
+.S
+{
+
+    border-bottom-style:none;
+    /*border-bottom-color: #d3d3d3;*/
+}
+.N
+{
+    border-top-style:none;
+    /*border-top-color: #d3d3d3;*/
+}
+.W
+{
+    border-right-style:none;
+    /*border-right-color: #d3d3d3;*/
+}
+.E
+{
+    border-left-style:none;
+    /*border-left-color: #d3d3d3;*/
+}
