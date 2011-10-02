@@ -59,8 +59,6 @@ $def with (size,maze,playable)
     $$(document).ready(function(){
         $$("#option-$size").attr("selected","selected");
         $$(document).keydown(function(event){
-            console.log(event.keyCode);
-
             if (event.keyCode == 37 || event.keyCode==72){ //left or h
                 event.preventDefault();
                 return move('E',function(x,y){return $$("#node-"+x+"-"+(y-1))});
