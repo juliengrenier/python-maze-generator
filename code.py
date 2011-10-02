@@ -6,7 +6,6 @@ urls =(
     '/','generate'
 )
 
-render = web.template.render('templates/')
 from sys import setrecursionlimit
 setrecursionlimit(2000)
 class generate:
