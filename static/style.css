@@ -1,3 +1,6 @@
+body{
+    width: 600px;
+}
 table{
     border-collapse: collapse;
     width: 600px;
