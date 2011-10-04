@@ -1,13 +1,11 @@
 table{
     border-collapse: collapse;
-    width: 700px;
-    height: 700px;
+    width: 600px;
+    height: 600px;
     max-height: 700px;
 }
 td{
-    border-color: black;
-    border-width: 3px;
-    border-style:solid;
+    border: 3px solid #000000;
     font-size: 8px;
 }
 
@@ -22,22 +20,17 @@ td{
 }
 .S
 {
-
     border-bottom-style:none;
-    /*border-bottom-color: #d3d3d3;*/
 }
 .N
 {
     border-top-style:none;
-    /*border-top-color: #d3d3d3;*/
 }
 .W
 {
     border-right-style:none;
-    /*border-right-color: #d3d3d3;*/
 }
 .E
 {
     border-left-style:none;
-    /*border-left-color: #d3d3d3;*/
 }

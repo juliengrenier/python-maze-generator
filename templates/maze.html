@@ -21,6 +21,7 @@ $def with (size,maze,playable)
 </head>
 <body>
     <a href="http://github.com/juliengrenier/python-maze-generator"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+    <div style="width: 600px">
     <p>Press arrows to solve this maze; Vim binding also work (h,j,k,l)</p>
     $if playable:
         <form action="/" method="GET">
@@ -32,7 +33,12 @@ $def with (size,maze,playable)
             <input type="submit" name="" value="Generate">
         </form>
 
-    <input type="submit" name="reset" id="reset-button" value="Reset">
+        <input type="submit" name="reset" id="reset-button" value="Reset">
+    <div style="float: right;">
+        <span id="stopwatch"></span>
+    </div>
+
+
 
     <table id="table-id">
         $for row in range(size):
@@ -47,11 +53,23 @@ $def with (size,maze,playable)
                         <td id="node-$row-$column" data-row="$row" data-column="$column" class="$maze.get_classes_for_node((row,column))">&nbsp;</td>
             </tr>
     </table>
-    <p></p>
-    
+    </div>
 </body>
 <script type="text/javascript" src="static/maze.js"></script>
+<script type="text/javascript" src="static/stopwatch.js"></script>
 <script type="text/javascript">
-    $$("#option-$size").attr("selected","selected");
+
+    $$(document).ready(function(){
+        $$("#option-$size").attr("selected","selected");
+            MAZE.StopWatch = StopWatch;
+            StopWatch.setElementId('stopwatch');
+        $$(document).keydown(MAZE.handeKeydownEvent);
+        
+        $$("#reset-button").click(function(e){
+            e.preventDefault();
+            MAZE.reset();
+        });
+    });
+
 </script>
 </html>
