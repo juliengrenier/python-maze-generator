@@ -1,13 +1,19 @@
 from itertools import product
 import random
-#Aldous-Broden algo
 class Mazegen(object):
+    """
+        Base class to generates random mazes. The default implements is the Aldous-Broden algorithm.
+        The Aldous-Broden algorithm is to randomly choose direction (target) from your current position (source). if the target is hadn't been visited add it to the source children.
+        If it had already been visited do nothing.
+        Continue to pick nodes until all nodes have been visited.
+    """
+    #Aldous-Broden algo
     def __init__(self,size):
         self.size = size
         self.tree = {}
 
 
-    def possible_choices(self,node):
+    def generate_possible_choices(self,node):
         x,y = node
         max=self.size
         moves = []
@@ -18,7 +24,7 @@ class Mazegen(object):
         return moves
 
     def pick_a_move(self,node):
-        return random.choice(self.possible_choices(node)),node
+        return random.choice(self.generate_possible_choices(node)),node
     
     def is_visited(self,node):
         if node in self.tree:
@@ -34,7 +40,7 @@ class Mazegen(object):
 
 
     def add_child_to_parent(self,node,parent):
-        direction = self.move_direction(parent,node)
+        direction = self.get_direction(parent,node)
         if direction in self.tree[parent][1]:
             raise Exception('%s already a child of %s. %s' % (node,parent,self.tree))
         self.tree[parent][1].append(direction)
@@ -71,7 +77,7 @@ class Mazegen(object):
     def get_classes_for_node(self,node):
         classes = self.tree[node][1]
         if self.tree[node][0]:
-            classes.append(self.move_direction(node,self.tree[node][0]))
+            classes.append(self.get_direction(node,self.tree[node][0]))
         classes_string = " ".join(classes)
         return classes_string
 
@@ -82,7 +88,7 @@ class Mazegen(object):
         f.write(result.__unicode__())
         f.close()
 
-    def move_direction(self,from_node,to_node):
+    def get_direction(self,from_node,to_node):
         x1,y1 = from_node
         x2,y2 = to_node
         if x1 < x2: return 'S'
@@ -90,13 +96,19 @@ class Mazegen(object):
         if y1 > y2: return 'E'
         if y1 < y2: return 'W'
 
+
+
 class RecursiveBacktracker(Mazegen):
+    """
+    Generate maze using the Recursice Backtracker algorithm
+    Which basically means put all visited nodes in a stack. We you get stuck. Pop elements of the stack until you can continue. When the stack is empty you are finished
+    """
     def __init__(self,size):
         super(RecursiveBacktracker,self).__init__(size)
         self.stack = []
 
     def pick_a_move(self,node):
-        choices = filter(lambda c: not self.is_visited(c),self.possible_choices(node))
+        choices = filter(lambda c: not self.is_visited(c),self.generate_possible_choices(node))
         if choices:
             self.stack.append(node)
             choice = random.choice(choices)
@@ -104,12 +116,17 @@ class RecursiveBacktracker(Mazegen):
         return self.pick_a_move(self.stack.pop())
         
 class GrowingTree(Mazegen):
+    """
+    Generate maze using the Growing Tree algorithm
+
+    Which basically means put all visited nodes in a set. We you get stuck. Randomly chooses a node from that set(remove it from the set too). You are finished when the set is empty
+    """
     def __init__(self,size):
         super(GrowingTree,self).__init__(size)
         self.active_sets = set([])
 
     def pick_a_move(self,node):
-        choices = filter(lambda c: not self.is_visited(c),self.possible_choices(node))
+        choices = filter(lambda c: not self.is_visited(c),self.generate_possible_choices(node))
         if choices:
             choice = random.choice(choices)
             return choice,node
