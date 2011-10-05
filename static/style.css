@@ -1,5 +1,7 @@
 body{
-    width: 600px;
+    width: 650px;
+    height: 750px;
+    background-color: #dbdbdb;
 }
 table{
     border-collapse: collapse;
