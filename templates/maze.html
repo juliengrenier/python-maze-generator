@@ -2,8 +2,12 @@ $def with (size,maze,playable)
 <html>
 <head>
     <title>Maze</title>
-    <link href="static/style.css" rel="stylesheet">
-    <script type="text/javascript" src="static/jquery.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.js"></script>
+
+
     $if playable and settings.GA_ACCOUNT:
         <script type="text/javascript">
 
@@ -21,19 +25,20 @@ $def with (size,maze,playable)
 </head>
 <body>
     <a href="http://github.com/juliengrenier/python-maze-generator"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
-    <div style="width: 600px">
+    <div id="home" style="width: 600px" date-role="content">
     <p>Press arrows to solve this maze; Vim binding also work (h,j,k,l)</p>
     $if playable:
-        <form action="/" method="GET">
+        <form id="generate-form-id" action="/" method="POST">
             <p>Generate a new maze</p>
             <select name="size">
                 $for option in range(3,45):
                     <option id="option-$option" value="$option">$option</option>
             </select>
-            <input type="submit" name="" value="Generate">
+            <a href="#" id="generate-button-id" data-role="button" data-inline="true">Generate</a>
         </form>
 
-        <input type="submit" name="reset" id="reset-button" value="Reset">
+
+        <a href="#" id="reset-button" data-role="button" data-inline="true">Reset</a>
     <div style="float: right;">
         <span id="stopwatch"></span>
     </div>
@@ -54,22 +59,40 @@ $def with (size,maze,playable)
             </tr>
     </table>
     </div>
-</body>
-<script type="text/javascript" src="static/maze.js"></script>
-<script type="text/javascript" src="static/stopwatch.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript" src="static/maze.js"></script>
+    <script type="text/javascript" src="static/stopwatch.js"></script>
 
-    $$(document).ready(function(){
-        $$("#option-$size").attr("selected","selected");
-            MAZE.StopWatch = StopWatch;
-            StopWatch.setElementId('stopwatch');
+</body>
+<script type="text/javascript">
+    var is_loaded = false;
+    var bind_events = function(){
+        if(is_loaded)return;
+        is_loaded=true;
         $$(document).keydown(MAZE.handeKeydownEvent);
-        
-        $$("#reset-button").click(function(e){
+
+        $$("#reset-button").live('click',function(e){
             e.preventDefault();
             MAZE.reset();
         });
-    });
+        $$("#generate-button-id").live('click',function(e){
+            window.location = "/?size="+$$("option:selected").val();
+        });
 
+
+        $$("td").live('tap',function(e){
+            MAZE.moveTo($$(this));
+        })
+    };
+
+    $$("body").live('pageinit',function(event){
+        if (!is_loaded){//For some reason the event is launched twice, which is annoying.
+            bind_events();
+        }
+        MAZE.StopWatch = StopWatch;
+        StopWatch.setElementId('stopwatch');
+
+        $$("#option-$size").attr("selected","selected");
+    });
 </script>
+
 </html>
