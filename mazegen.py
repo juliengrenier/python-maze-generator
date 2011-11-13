@@ -2,12 +2,12 @@ from itertools import product
 import random
 class Mazegen(object):
     """
-        Base class to generates random mazes. The default implements is the Aldous-Broden algorithm.
-        The Aldous-Broden algorithm is to randomly choose direction (target) from your current position (source). if the target is hadn't been visited add it to the source children.
+        Base class to generates random mazes. The default implements is the Aldous-Broder algorithm.
+        The Aldous-Broder algorithm is to randomly choose direction (target) from your current position (source). if the target is hadn't been visited add it to the source children.
         If it had already been visited do nothing.
         Continue to pick nodes until all nodes have been visited.
     """
-    #Aldous-Broden algo
+    #Aldous-Broder algo
     def __init__(self,size):
         self.size = size
         self.tree = {}
