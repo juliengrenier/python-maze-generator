@@ -12,7 +12,7 @@ class generate:
     def generate(self):
         inputs = web.input()
         if 'size' in inputs.keys():
-            size = int(inputs.size)
+            size = min(44, int(inputs.size))
         else:
             size = 15
         maze = GrowingTree(size=size)
