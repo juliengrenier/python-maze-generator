@@ -1,4 +1,5 @@
 from itertools import product
+from argparse import ArgumentParser
 import random
 class Mazegen(object):
     """
@@ -25,7 +26,7 @@ class Mazegen(object):
 
     def pick_a_move(self,node):
         return random.choice(self.generate_possible_choices(node)),node
-    
+
     def is_visited(self,node):
         if node in self.tree:
             return self.tree[node][2]
@@ -60,7 +61,7 @@ class Mazegen(object):
         self.set_visited(node)
 
     def is_finish(self):
-        return not filter(lambda n:not self.is_visited(n), self.tree)
+        return all(self.is_visited(n) for n in self.tree) and len(self.tree) == self.size ** 2
 
     def generate_maze(self):
         root = (0,0)
@@ -101,32 +102,40 @@ class Mazegen(object):
 class RecursiveBacktracker(Mazegen):
     """
     Generate maze using the Recursice Backtracker algorithm
-    Which basically means put all visited nodes in a stack. We you get stuck. Pop elements of the stack until you can continue. When the stack is empty you are finished
+    Which basically means put all visited nodes in a stack. When you get stuck. Pop elements of the stack until you can continue. When the stack is empty you are finished
     """
     def __init__(self,size):
-        super(RecursiveBacktracker,self).__init__(size)
+        super().__init__(size)
         self.stack = []
 
     def pick_a_move(self,node):
-        choices = filter(lambda c: not self.is_visited(c),self.generate_possible_choices(node))
+        choices = [c for c in self.generate_possible_choices(node) if not self.is_visited(c) ]
         if choices:
-            self.stack.append(node)
             choice = random.choice(choices)
             return choice,node
+        if self.is_finish():
+            return None, None
         return self.pick_a_move(self.stack.pop())
-        
+
+    def set_visited(self,node):
+        super().set_visited(node)
+        self.stack.append(node)
+
+    def is_finish(self):
+        return len(self.stack) == 0
+
 class GrowingTree(Mazegen):
     """
     Generate maze using the Growing Tree algorithm
 
-    Which basically means put all visited nodes in a set. We you get stuck. Randomly chooses a node from that set(remove it from the set too). You are finished when the set is empty
+    Which basically means put all visited nodes in a set. When you get stuck. Randomly chooses a node from that set(remove it from the set too). You are finished when the set is empty
     """
     def __init__(self,size):
-        super(GrowingTree,self).__init__(size)
+        super().__init__(size)
         self.active_sets = set([])
 
     def pick_a_move(self,node):
-        choices = filter(lambda c: not self.is_visited(c),self.generate_possible_choices(node))
+        choices = [c for c in self.generate_possible_choices(node) if not self.is_visited(c) ]
         if choices:
             choice = random.choice(choices)
             return choice,node
@@ -143,7 +152,7 @@ class GrowingTree(Mazegen):
 
 
     def set_visited(self,node):
-        super(GrowingTree,self).set_visited(node)
+        super().set_visited(node)
         self.active_sets.add(node)
 
     def is_finish(self):
@@ -152,10 +161,17 @@ class GrowingTree(Mazegen):
 if __name__ == '__main__':
     from sys import argv,setrecursionlimit
     setrecursionlimit(2000)
-    if not len(argv) == 3:
-        print "Usage : mazegen [size] [filename]"
-        exit(1)
-    name,size,filename = argv
-    maze_gen = GrowingTree(size=int(size))  
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('--type')
+    arg_parser.add_argument('size', type=int, default=10)
+    arg_parser.add_argument('filename', default='maze.html')
+    args = arg_parser.parse_args()
+    if args.type == 'growing':
+        maze_gen = GrowingTree(size=args.size)
+    elif args.type == 'recursive':
+        maze_gen = RecursiveBacktracker(size=args.size)
+    else:
+        maze_gen = Mazegen(size=args.size)
+
     maze_gen.generate_maze()
-    maze_gen.draw_maze(filename=filename)
+    maze_gen.draw_maze(filename=args.filename)
